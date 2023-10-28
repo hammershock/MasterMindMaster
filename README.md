@@ -17,11 +17,12 @@ AutoSolver 是一个自动求解 Mastermind 游戏的程序，它基于概率论
     - 用于实现漂亮的进度条，使得计算过程不再枯燥。这在处理大量数据或进行长时间运算时尤其有用。
     - 如果安装了 `tqdm`，可以在 `Solver.auto` 方法中设置 `pbar=True` 来添加进度条，以便实时监控处理进度。
 
-## components compilation
-
----
-
+## components compilation 组件编译
+- 运行以下命令：
 ```
 g++ -shared -fpic -o libsolver.so source/solver.cpp -std=c++17
 ```
+
+---
+
 Mastermind 游戏不仅仅是一个普通的益智游戏，它的解决过程也充分体现了计算机科学和信息理论的魅力。使用 AutoSolver，你可以更深入地理解这些理论，并体验将理论应用到实际问题中的乐趣。
