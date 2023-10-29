@@ -1,4 +1,5 @@
 import multiprocessing
+import pickle
 from functools import partial
 from typing import Dict
 
@@ -14,7 +15,7 @@ except ModuleNotFoundError:
     tqdm_exists = False
 
 
-class Solver:
+class AutoSolver:
     """
         A Solver class for the Mastermind game, implementing an algorithm that
         optimizes guesses based on prior feedback to efficiently solve the game.
@@ -126,7 +127,7 @@ class Solver:
                 print(game.steps, f"guess {guess} -> {feedback}", len(self.memory))
         return self.game.steps
 
-    def benchmark(self):
+    def benchmark(self, save_path=None):
         total_steps = 0
         pbar = tqdm(enumerate(game.action_space.actions_), total=10 ** self.game.number_of_digit)
         for i, answer in pbar:
@@ -135,10 +136,19 @@ class Solver:
             total_steps += steps
             mean_steps = total_steps / (i + 1)
             pbar.set_postfix(mean_steps=np.array(mean_steps), current_steps=steps)
+        if save_path:
+            with open(save_path, 'wb+') as file:
+                pickle.dump(self.cache, file)
+
+    def load_tree(self, filepath):
+        with open(filepath, 'rb') as file:
+            self.cache = pickle.load(file)
 
 
 if __name__ == "__main__":
     game = Game(4, verbose=False)
-    solver = Solver(game)
-    # solver.auto(pbar=True)
-    solver.benchmark()
+    solver = AutoSolver(game)
+    solver.load_tree("tree_cache.pkl")
+    solver.auto(pbar=False, verbose=True)
+    print(game.peek_answer())
+    # solver.benchmark()
