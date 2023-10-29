@@ -64,7 +64,7 @@ class Game:
         step(guess: str): 执行一步游戏动作，返回游戏的反馈。
     """
 
-    def __init__(self, number_of_digit=4):
+    def __init__(self, number_of_digit=4, answer=None, verbose=True):
         """
         构造函数。
 
@@ -76,13 +76,17 @@ class Game:
         self.__answer = None
         self.steps = 0
         self.finished = False
-        self.reset()
+        self.reset(answer=answer)
+        self.verbose = verbose
 
-    def reset(self):
+    def reset(self, answer: str = None):
         """重置游戏，生成新的答案，并将步数和游戏状态重置。"""
         self.steps = 0
         self.finished = False
-        self.__answer = str(random.randint(0, 10 ** self.number_of_digit - 1)).zfill(self.number_of_digit)
+        if answer is None:
+            self.__answer = str(random.randint(0, 10 ** self.number_of_digit - 1)).zfill(self.number_of_digit)
+        else:
+            self.__answer = answer
 
     def peek_answer(self) -> str:
         """
@@ -108,7 +112,8 @@ class Game:
             num_a, num_b = compare_(self.__answer.encode(), guess.encode())
             self.steps += 1
             if num_a == self.number_of_digit:
-                print(f"game finished in {self.steps} steps, congratulations!")
+                if self.verbose:
+                    print(f"game finished in {self.steps} steps, congratulations!")
                 self.finished = True
             return f"{num_a}A{num_b}B"
 

@@ -40,24 +40,30 @@ extern "C" {
     }
 
     // 注意：返回 char* 而不是 std::string
-    const char* calculate(const char* action, const char** memory, size_t memory_size, double* entropy) {
-        std::unordered_map<std::string, double> prob_observation;
+    void calculate(const char* action, const char** memory, size_t memory_size, double* entropy, const int number_of_digit) {
+        // std::unordered_map<int, double> prob_observation;
+        double prob_observation[number_of_digit * number_of_digit + 1] = {0};
         double prob = 1.0 / memory_size;
         *entropy = 0.0;  // 初始化 entropy
-
+        bool inplace = false;
         for (size_t i = 0; i < memory_size; ++i) {
             int num_a = 0, num_b = 0;
             compare2(memory[i], action, &num_a, &num_b);
-            std::string observation = std::to_string(num_a) + "A" + std::to_string(num_b) + "B";
+            int observation = num_a * number_of_digit + num_b;
+            if (memory[i] == action) inplace = true;
             prob_observation[observation] += prob;
         }
 
-        for (const auto& kv : prob_observation) {
-            *entropy -= kv.second * std::log2(kv.second);
+        for(double x : prob_observation) {
+        if (x > 0)*entropy -= x * std::log2(x);
         }
+        if (inplace) *entropy += 0.0001;
+//        for (const auto& kv : prob_observation) {
+//            *entropy -= kv.second * std::log2(kv.second);
+//        }
 
         // 注意：这里我们仅返回指向原始 action 字符串的指针
-        return action;
+        return;
     }
 }
 

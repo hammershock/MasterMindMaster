@@ -16,11 +16,12 @@ def compare_(answer: bytes, guess: bytes):
     return num_a.value, num_b.value
 
 
-def calculate(action: bytes, memory: List[bytes]):
+def calculate(action: bytes, memory: List[bytes], number_of_digit):
     entropy = ctypes.c_double()
     array_type = ctypes.c_char_p * len(memory)
+    n = ctypes.c_int(number_of_digit)
     memory_array = array_type(*memory)
-    lib.calculate(action, memory_array, len(memory), ctypes.byref(entropy))
+    lib.calculate(action, memory_array, len(memory), ctypes.byref(entropy), n)
     return entropy.value, action.decode()
 
 
