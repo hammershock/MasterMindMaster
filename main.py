@@ -129,13 +129,16 @@ class AutoSolver:
 
     def benchmark(self, save_path=None):
         total_steps = 0
+        worst = 0
         pbar = tqdm(enumerate(game.action_space.actions_), total=10 ** self.game.number_of_digit)
         for i, answer in pbar:
             self.reset(answer.decode())
             steps = self.auto()
             total_steps += steps
             mean_steps = total_steps / (i + 1)
-            pbar.set_postfix(mean_steps=np.array(mean_steps), current_steps=steps)
+            pbar.set_postfix(mean_steps=np.array(mean_steps), current_steps=steps, worst=worst)
+            if steps > worst:
+                worst = steps
         if save_path:
             with open(save_path, 'wb+') as file:
                 pickle.dump(self.cache, file)
@@ -149,5 +152,5 @@ if __name__ == "__main__":
     game = Game(4, verbose=False)
     solver = AutoSolver(game)
     solver.load_tree("tree_cache.pkl")
-    solver.auto(pbar=False, verbose=True)
-    # solver.benchmark()
+    # solver.auto(pbar=False, verbose=True)
+    solver.benchmark()
