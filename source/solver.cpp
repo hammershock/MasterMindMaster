@@ -58,20 +58,7 @@ extern "C" {
         if (x > 0)*entropy -= x * std::log2(x);
         }
         if (inplace) *entropy += 0.0001;
-//        for (const auto& kv : prob_observation) {
-//            *entropy -= kv.second * std::log2(kv.second);
-//        }
-
-        // 注意：这里我们仅返回指向原始 action 字符串的指针
+         // 我们鼓励猜测应尽可能在可能的解空间进行而不是全部的状态空间，所以为那些真正有可能命中答案的猜测赋予一些微弱的优势
         return;
     }
 }
-
-// int main() {
-//     const char* memory[] = {"1234", "2345", "3456", "4567"};
-//     const char* action = "1234";
-//     double entropy = 0;  // 分配内存给 entropy
-//     auto result = calculate(action, memory, 4, &entropy);
-//     std::cout << "Entropy: " << entropy << ", Action: " << result << std::endl;
-//     return 0;
-// }

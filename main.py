@@ -51,7 +51,7 @@ class AutoSolver:
         self.game.reset(answer=answer)
         self.history = ()
 
-    def guess(self, vbar=False):
+    def guess(self, vbar=False) -> str:
         """
                 Makes an optimized guess by evaluating all possible actions and selecting the one
                 with the highest expected information gain.
@@ -150,5 +150,4 @@ if __name__ == "__main__":
     solver = AutoSolver(game)
     solver.load_tree("tree_cache.pkl")
     solver.auto(pbar=False, verbose=True)
-    print(game.peek_answer())
     # solver.benchmark()
